@@ -78,6 +78,7 @@ package starling.text
         private var mRequiresRedraw:Boolean;
         private var mIsRenderedText:Boolean;
         private var mTextBounds:Rectangle;
+        private var mLeading:int;
         
         private var mHitArea:DisplayObject;
         private var mBorder:DisplayObjectContainer;
@@ -155,6 +156,7 @@ package starling.text
             
             var textFormat:TextFormat = new TextFormat(mFontName, 
                 mFontSize * scale, mColor, mBold, mItalic, mUnderline, null, null, mHAlign);
+            textFormat.leading = leading;
             textFormat.kerning = mKerning;
             
             sNativeTextField.defaultTextFormat = textFormat;
@@ -251,7 +253,7 @@ package starling.text
             
             bitmapFont.fillQuadBatch(mQuadBatch,
                 mHitArea.width, mHitArea.height, mText, mFontSize, mColor, mHAlign, mVAlign,
-                mAutoScale, mKerning);
+                mAutoScale, mKerning, mLeading);
             
             mTextBounds = null; // will be created on demand
         }
@@ -479,6 +481,18 @@ package starling.text
 			
             mNativeFilters = value.concat();
             mRequiresRedraw = true;
+        }
+
+        /** Indicates whether the font size is scaled down so that the complete text fits
+         *  into the text field. @default false */
+        public function get leading():int { return mLeading; }
+        public function set leading(value:int):void
+        {
+            if (mLeading != value)
+            {
+                mLeading = value;
+                mRequiresRedraw = true;
+            }
         }
         
         /** Makes a bitmap font available at any text field, identified by its <code>name</code>.
